@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
 import dotenv from "dotenv";
 
 dotenv.config(); // Load environment variables from .env file
@@ -15,3 +16,4 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const connectFirebase = initializeApp(firebaseConfig);
+export const storage = getStorage(connectFirebase);

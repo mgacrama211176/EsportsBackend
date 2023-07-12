@@ -1,9 +1,5 @@
 import bcrypt from "bcrypt";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export const SignIn = async (request, response, next) => {
   const auth = getAuth();

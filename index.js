@@ -7,6 +7,7 @@ import { connectFirebase } from "./connectFirebase.js";
 
 //ROUTES
 import auth from "./routes/auth.js";
+import upload from "./routes/upload.js";
 
 const app = express();
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(cors({ credentials: true }));
 
 app.use("/api/auth", auth);
+app.use("/api/uploadImages", upload);
 
 app.use((err, request, response, next) => {
   const status = err.status || 500;
