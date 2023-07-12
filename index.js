@@ -10,19 +10,20 @@ import eventRoute from "./routes/events-route.js";
 const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 4000;
-const connectDB = () => {
-  mongoose
-    .connect(
-      "PASTE MONGODB LINK HERE",
-      { useNewUrlParser: true }
-    )
-    .then(() => {
-      console.log("Database Connected");
-    })
-    .catch((err) => {
-      throw err;
-    });
-};
+
+// const connectDB = () => {
+//   mongoose
+//     .connect(
+//       "PASTE MONGODB LINK HERE",
+//       { useNewUrlParser: true }
+//     )
+//     .then(() => {
+//       console.log("Database Connected");
+//     })
+//     .catch((err) => {
+//       throw err;
+//     });
+// };
 
 app.use(cookieParser());
 app.use(express.json());
@@ -41,7 +42,7 @@ app.use((err, request, response, next) => {
 });
 
 app.listen(PORT, () => {
-  connectDB();
+  // connectDB();
   console.log(`port is listening on ${PORT}`);
   console.log("express connected");
 });
