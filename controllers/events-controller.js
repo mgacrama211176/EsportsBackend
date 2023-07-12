@@ -18,5 +18,6 @@ export const SignIn = async (request, response, next) => {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
+      response.status(401).json(errorMessage);
     });
 };
