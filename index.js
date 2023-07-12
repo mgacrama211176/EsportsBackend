@@ -3,33 +3,21 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { connectFirebase } from "./connectFirebase.js";
 
 //ROUTES
-import eventRoute from "./routes/events-route.js";
+import auth from "./routes/auth.js";
 
 const app = express();
 dotenv.config();
-const PORT = process.env.PORT || 4000;
 
-// const connectDB = () => {
-//   mongoose
-//     .connect(
-//       "PASTE MONGODB LINK HERE",
-//       { useNewUrlParser: true }
-//     )
-//     .then(() => {
-//       console.log("Database Connected");
-//     })
-//     .catch((err) => {
-//       throw err;
-//     });
-// };
+const PORT = process.env.PORT || 4000;
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({ credentials: true }));
 
-app.use("/api", eventRoute);
+app.use("/api/auth", auth);
 
 app.use((err, request, response, next) => {
   const status = err.status || 500;
@@ -42,7 +30,6 @@ app.use((err, request, response, next) => {
 });
 
 app.listen(PORT, () => {
-  // connectDB();
   console.log(`port is listening on ${PORT}`);
   console.log("express connected");
 });
