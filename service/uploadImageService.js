@@ -21,9 +21,7 @@ export const uploadService = async (
     );
     const info = await uploadBytes(imageRef, file.buffer);
     const downloadURL = await getDownloadURL(imageRef);
-    return response
-      .status(HttpSuccessCode.Accepted)
-      .json({ imageUrl: downloadURL, info });
+    return downloadURL;
   } catch (err) {
     return response.status(HttpErrorCode.BadRequest).json(err);
   }

@@ -8,7 +8,6 @@ import {
 import { storage } from "../connectFirebase.js";
 import HttpSuccessCode from "../utils/HttpSuccssCodes.js";
 import HttpErrorCode from "../utils/HttpErrorCodes.js";
-import { v4 } from "uuid";
 import multer from "multer";
 import { uploadService } from "../service/uploadImageService.js";
 
@@ -17,7 +16,13 @@ const upload = multer();
 
 export const postCarousel = async (request, response, next) => {
   upload.single("imageUpload")(request, response, async (error) => {
-    await uploadService("carousel", request.file, request, response);
+    const result = await uploadService(
+      "carousel",
+      request.file,
+      request,
+      response
+    );
+    response.status(HttpSuccessCode.OK).json({ imageUrl: result });
   });
 };
 
