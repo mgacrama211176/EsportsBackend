@@ -1,4 +1,10 @@
-import { ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  listAll,
+  deleteObject,
+} from "firebase/storage";
 import { storage } from "../connectFirebase.js";
 import HttpSuccessCode from "../utils/HttpSuccssCodes.js";
 import HttpErrorCode from "../utils/HttpErrorCodes.js";
@@ -49,6 +55,24 @@ export const getAllCarousel = async (request, response, next) => {
       imageUrls.push(downloadURL);
     }
     return response.status(HttpSuccessCode.OK).json({ imageUrls });
+  } catch (err) {
+    return response.status(HttpErrorCode.BadRequest).json(err);
+  }
+};
+
+export const deleteImageFromCarousel = async (request, response, next) => {
+  const { imageUrl } = request.body;
+
+  try {
+    // Get the reference to the image in Firebase Storage
+    const imageRef = ref(storage, imageUrl);
+
+    // Delete the image
+    await deleteObject(imageRef);
+
+    return response
+      .status(HttpSuccessCode.OK)
+      .json({ message: "Image deleted successfully" });
   } catch (err) {
     return response.status(HttpErrorCode.BadRequest).json(err);
   }
