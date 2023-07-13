@@ -8,6 +8,7 @@ import { connectFirebase } from "./connectFirebase.js";
 //ROUTES
 import auth from "./routes/auth.js";
 import carousel from "./routes/carousel.js";
+import teams from "./routes/teams.js";
 
 const app = express();
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(cors({ credentials: true }));
 
 app.use("/api/auth", auth);
 app.use("/api/carousel", carousel);
+app.use("/api/teams", teams);
 
 app.use((err, request, response, next) => {
   const status = err.status || 500;

@@ -10,37 +10,14 @@ import HttpSuccessCode from "../utils/HttpSuccssCodes.js";
 import HttpErrorCode from "../utils/HttpErrorCodes.js";
 import { v4 } from "uuid";
 import multer from "multer";
+import { uploadService } from "../service/uploadImageService.js";
 
 // Create a multer instance with appropriate configuration
 const upload = multer();
 
 export const postCarousel = async (request, response, next) => {
   upload.single("imageUpload")(request, response, async (error) => {
-    if (error) {
-      return response.status(HttpErrorCode.BadRequest).json(error);
-    }
-
-    const { file } = request;
-
-    if (!file) {
-      return response
-        .status(HttpSuccessCode.OK)
-        .json({ message: "No Image Added!" });
-    }
-
-    try {
-      const imageRef = ref(storage, `carousel/${file.originalname}_${v4()}`);
-      const info = await uploadBytes(imageRef, file.buffer);
-
-      // Get the download URL of the uploaded file
-      const downloadURL = await getDownloadURL(imageRef);
-
-      return response
-        .status(HttpSuccessCode.Accepted)
-        .json({ imageUrl: downloadURL, info });
-    } catch (err) {
-      return response.status(HttpErrorCode.BadRequest).json(err);
-    }
+    await uploadService("carousel", request.file, request, response);
   });
 };
 
