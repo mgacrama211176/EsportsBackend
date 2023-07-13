@@ -1,4 +1,4 @@
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
 import { storage } from "../connectFirebase.js";
 import HttpSuccessCode from "../utils/HttpSuccssCodes.js";
 import HttpErrorCode from "../utils/HttpErrorCodes.js";
@@ -15,7 +15,6 @@ export const carousel = async (request, response, next) => {
     }
 
     const { file } = request;
-    console.log(file); // Check if the file is properly received
 
     if (!file) {
       return response
@@ -37,4 +36,20 @@ export const carousel = async (request, response, next) => {
       return response.status(HttpErrorCode.BadRequest).json(err);
     }
   });
+};
+
+export const getAllCarousel = async (request, response, next) => {
+  //   response.status(HttpSuccessCode.OK).json({ message: `GG` });
+  try {
+    const carouselRef = ref(storage, "carousel");
+    const carouselFiles = await listAll(carouselRef);
+    const imageUrls = [];
+    for (const item of carouselFiles.items) {
+      const downloadURL = await getDownloadURL(item);
+      imageUrls.push(downloadURL);
+    }
+    return response.status(HttpSuccessCode.OK).json({ imageUrls });
+  } catch (err) {
+    return response.status(HttpErrorCode.BadRequest).json(err);
+  }
 };
