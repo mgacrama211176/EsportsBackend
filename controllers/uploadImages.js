@@ -14,7 +14,7 @@ import multer from "multer";
 // Create a multer instance with appropriate configuration
 const upload = multer();
 
-export const carousel = async (request, response, next) => {
+export const postCarousel = async (request, response, next) => {
   upload.single("imageUpload")(request, response, async (error) => {
     if (error) {
       return response.status(HttpErrorCode.BadRequest).json(error);
