@@ -6,22 +6,28 @@ import { v4 } from "uuid";
 
 export const uploadService = async (
   storageLocation,
-  file,
+  files,
   request,
   response
 ) => {
-  if (!file) {
-    throw new Error("No image found");
+  if (!files || files.length === 0) {
+    throw new Error("No images found");
   }
 
   try {
-    const imageRef = ref(
-      storage,
-      `${storageLocation}/${file.originalname}_${v4()}`
-    );
-    const info = await uploadBytes(imageRef, file.buffer);
-    const downloadURL = await getDownloadURL(imageRef);
-    return downloadURL;
+    const downloadURLs = [];
+
+    for (const file of files) {
+      const imageRef = ref(
+        storage,
+        `${storageLocation}/${file.originalname}_${v4()}`
+      );
+      await uploadBytes(imageRef, file.buffer);
+      const downloadURL = await getDownloadURL(imageRef);
+      downloadURLs.push(downloadURL);
+    }
+
+    return downloadURLs;
   } catch (err) {
     return response.status(HttpErrorCode.BadRequest).json(err);
   }

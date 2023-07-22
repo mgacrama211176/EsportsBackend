@@ -8,21 +8,34 @@ import {
 import { storage } from "../connectFirebase.js";
 import HttpSuccessCode from "../utils/HttpSuccssCodes.js";
 import HttpErrorCode from "../utils/HttpErrorCodes.js";
-import multer from "multer";
 import { uploadService } from "../service/uploadImageService.js";
 
 // Create a multer instance with appropriate configuration
-const upload = multer();
+import { upload } from "../middleware/uploads.js";
+
+// Call the upload function to get the multer instance
+const multerUpload = upload();
 
 export const postCarousel = async (request, response, next) => {
-  upload.single("imageUpload")(request, response, async (error) => {
-    const result = await uploadService(
-      "carousel",
-      request.file,
-      request,
-      response
-    );
-    response.status(HttpSuccessCode.OK).json({ imageUrl: result });
+  multerUpload.array("imageUploads")(request, response, async (error) => {
+    if (error) {
+      return response.status(HttpErrorCode.BadRequest).json(error);
+    }
+
+    try {
+      const uploadedImages = await uploadService(
+        "carousel",
+        request.files,
+        request,
+        response
+      );
+
+      // Respond with an array of the uploaded image URLs
+      response.status(HttpSuccessCode.OK).json({ imageUrls: uploadedImages });
+    } catch (err) {
+      // If there is an error during the `uploadService`, handle it here
+      return response.status(HttpErrorCode.BadRequest).json(err);
+    }
   });
 };
 
