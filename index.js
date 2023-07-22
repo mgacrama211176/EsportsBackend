@@ -9,6 +9,7 @@ import { connectFirebase } from "./connectFirebase.js";
 import auth from "./routes/auth.js";
 import carousel from "./routes/carousel.js";
 import teams from "./routes/teams.js";
+import HttpSuccessCode from "./utils/HttpSuccssCodes.js";
 
 const app = express();
 dotenv.config();
@@ -22,6 +23,12 @@ app.use(cors({ credentials: true }));
 app.use("/api/auth", auth);
 app.use("/api/carousel", carousel);
 app.use("/api/teams", teams);
+
+app.get("/docker", async (request, response, next) => {
+  response
+    .status(HttpSuccessCode.OK)
+    .json({ message: `Docker is now working` });
+});
 
 app.use((err, request, response, next) => {
   const status = err.status || 500;
