@@ -28,20 +28,17 @@ export const addTeams = async (request, response, next) => {
         request,
         response
       );
-
-      const teamLogoImage = await uploadService(
-        "teamLogo",
-        request.files["teamLogo"][0],
-        request,
-        response
-      );
-
+      // const teamLogoImage = await uploadService(
+      //   "teamLogo",
+      //   request.files["teamLogo"][0],
+      //   request,
+      //   response
+      // );
       const res = await addDoc(collection(db, "TEAMS"), {
         teamBanner: teamBannerImage,
-        teamLogo: teamLogoImage,
+        teamLogo: "teamLogoImage",
         teamName: request.body.teamName,
       });
-
       response.status(HttpSuccessCode.Created).json(res);
     });
   } catch (err) {
